@@ -1,5 +1,6 @@
 from faker import Faker
 import logging
+from datetime import datetime
 
 class BaseContact:
     def __init__(self, first_name, last_name, email_address, private_phone):
@@ -36,6 +37,22 @@ class BusinessContact(BaseContact):
 
 
 
+
+def caculate_time(func):
+    def wrapper(*args, **kwargs):
+        start_time = datetime.now()
+        result = func(*args, **kwargs)
+        end_time = datetime.now()
+        time_diff = end_time - start_time
+        print(f'It took {time_diff.total_seconds()} seconds to generate list with contcts.')
+        return result
+    return wrapper
+
+
+
+
+
+@caculate_time
 def create_contacts(contact_type, number):
     fake = Faker()
     contact_cards = []
@@ -71,8 +88,6 @@ def create_contacts(contact_type, number):
 def display_cards(list_with_cards):
     for card in list_with_cards:
         print(card)
-
-
 
 
 if __name__ == '__main__':
@@ -133,3 +148,7 @@ if __name__ == '__main__':
     ### Test - 0 cards ###
     print('### Test - 0 cards ###')
     create_contacts('business', 0)
+
+    print("--------- Task - decorator for calculating time of operation -----------")
+    print('Generate list with 1000 contacts')
+    list_1000_contacts = create_contacts('base', 1000)
